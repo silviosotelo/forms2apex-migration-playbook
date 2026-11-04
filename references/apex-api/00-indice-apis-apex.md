@@ -1,6 +1,6 @@
 # Índice de APIs de APEX y buenas prácticas de código
 
-Referencia de consulta de la skill `migrar-formulario`. **Versión objetivo fija: APEX 20.2 sobre Oracle 12.1** (DESA02 / DEVNEW / SANTA):
+Referencia de consulta de la skill `forms2apex`. **Versión objetivo fija: APEX 20.2 sobre Oracle 12.1** (según el perfil):
 no usar nada de versiones posteriores (ver tabla de versiones más abajo y `version-compatibility.md`). Si una API no está documentada para 20.2,
 marcarla `VERIFICATION REQUIRED` y probarla en la base antes de usarla.
 

@@ -1,10 +1,10 @@
-# Auditoría <NRO> – <NOMBRE> (`<archivo>.fmb`) vs APEX 400 página <NNNN>
+# Auditoría <NRO> – <NOMBRE> (`<archivo>.fmb`) vs APEX app <ID_APP> página <NNNN>
 
-- **Fecha:** <dd/mm/aaaa> · **Base:** DEVNEW (`SERVER_HOST = desa`) · APEX 20.2
+- **Fecha:** <dd/mm/aaaa> · **Base:** <ambiente de desarrollo según el perfil> (`SERVER_HOST = <…>`) · APEX 20.2
 - **Origen del pedido:** <migración nueva | ticket NNNN: texto del reclamo>
 - **Piezas APEX:** página(s) <…> · package <PKG_…> · colección <…> · programa APEX <…> (esquemas <…>)
 - **Forms:** bloques <…> (vista/tabla base real según `QueryDataSourceName`), program units <…>
-- **SANTA:** <no se consultó | verificado el dd/mm>
+- **Producción:** <no se consultó | verificado el dd/mm>
 
 Leyenda: ✅ migrado · ⚠️ parcial · ❌ falta / roto · ➖ no aplica en web · ➕ agregado en APEX
 
@@ -62,7 +62,7 @@ Casos de visibilidad/estado dinámico en el Forms (`SET_ITEM_PROPERTY`, `SHOW_VI
 
 Cómo se aplicó: <package compilado / página creada / página re-importada server-side>.
 
-| # | Qué se cambió | Dónde | Verificación en navegador (DEVNEW) |
+| # | Qué se cambió | Dónde | Verificación en navegador (ambiente de desarrollo) |
 |---|---|---|---|
 
 ### Matriz de casos
@@ -82,7 +82,7 @@ Cómo se aplicó: <package compilado / página creada / página re-importada ser
 | Diff paramétrico (cada filtro opcional cambia el resultado) | | |
 | Consola JS sin errores | | |
 
-### Ledger de datos de prueba (DEVNEW)
+### Ledger de datos de prueba (ambiente de desarrollo)
 
 | Qué | Estado |
 |---|---|

@@ -376,14 +376,14 @@ apex.message.setThemeHooks({
 
 ```javascript
 // Simple redirect
-apex.navigation.redirect('f?p=400:946:' + $v('pInstance') + '::::P946_ID:' + id);
+apex.navigation.redirect('f?p=&APP_ID.:946:' + $v('pInstance') + '::::P946_ID:' + id);
 
 // Open in new window
-apex.navigation.openInNewWindow('f?p=400:200:' + $v('pInstance'));
+apex.navigation.openInNewWindow('f?p=&APP_ID.:200:' + $v('pInstance'));
 
 // Open modal dialog
 apex.navigation.dialog(
-    'f?p=400:954:' + $v('pInstance') + '::::P954_ID:' + v_id,
+    'f?p=&APP_ID.:954:' + $v('pInstance') + '::::P954_ID:' + v_id,
     {
         title:    'Manage Emails',
         height:   500,
@@ -401,7 +401,7 @@ apex.navigation.dialog.cancel();
 
 // Popup window
 apex.navigation.popup({
-    url:    'f?p=400:950:' + $v('pInstance'),
+    url:    'f?p=&APP_ID.:950:' + $v('pInstance'),
     name:   'REPORT',
     width:  1000,
     height: 700

@@ -1,6 +1,6 @@
 # Índice de mapeo Forms 6i → APEX
 
-Referencia de consulta de la skill `migrar-formulario`: cómo se traduce cada concepto de Forms a APEX (módulos, bloques, items, record groups/LOVs,
+Referencia de consulta de la skill `forms2apex`: cómo se traduce cada concepto de Forms a APEX (módulos, bloques, items, record groups/LOVs,
 triggers, program units, seguridad). **Destino fijo: APEX 20.2 sobre Oracle 12.1; origen: Forms 6i (`.fmb` convertido a XML).** El proceso, las reglas
 duras y la verificación están en `SKILL.md`; cuando este índice y `SKILL.md` difieran, manda `SKILL.md`.
 

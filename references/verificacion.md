@@ -29,8 +29,8 @@ Si una fila no se puede cubrir en el ambiente, se declara como no verificada; no
 | Seguridad | Con un rol sin permiso: la página no abre y los `ON_DEMAND` no responden |
 | Impresión | `200 application/pdf` en el Network tab y PDF comparado contra el original de `RWRUN60` |
 
-Ejemplo real (6143): 8 caminos + 5 rechazos. Los que **más** bugs revelaron fueron la fecha futura y el grupo
-beneficiario que no contemplaba la categoría de un integrante.
+Ejemplo real (una migración de cambio de categoría masivo): 8 caminos + 5 rechazos. Los que **más** bugs
+revelaron fueron la fecha futura y el grupo beneficiario que no contemplaba la categoría de un integrante.
 
 ### El recorrido de QA, en orden
 
@@ -56,7 +56,7 @@ declarada* en el informe con recomendación, no como un PASS ni escondido.)
 
 **Pedidos de corrección con capturas (documento con anotaciones del usuario):** reproducir primero el estado actual en
 el navegador, igual a la captura, y recién después tocar nada; muchas anotaciones comparten una causa raíz
-(en el 827 "Monto 0" y "no trae la serie" eran el mismo item Per Request). Cada nota queda mapeada a su resolución y a la
+(en un caso, "Monto 0" y "no trae la serie" eran el mismo item Per Request). Cada nota queda mapeada a su resolución y a la
 evidencia (tabla nota → resolución → estado).
 
 ## 2. Método
@@ -64,15 +64,15 @@ evidencia (tabla nota → resolución → estado).
 **Navegador real, con clicks reales.** Disparar un botón con `elem.click()` desde `evaluate` **no ejecuta** las
 acciones del Dynamic Action. Usar el click del MCP de navegador (evento "trusted").
 
-**Nunca "verificar" un botón llamando a su función JS a mano.** En la 1219 del 6201 el DA ejecutaba
-`this.triggeringElement` en lugar de `agregarFormaPago()`; la prueba "pasaba" porque llamaba a la función
+**Nunca "verificar" un botón llamando a su función JS a mano.** En un caso, el DA de un modal ejecutaba
+`this.triggeringElement` en lugar de la función `agregarFormaPago()`; la prueba "pasaba" porque llamaba a la función
 directamente. **Si el click real no responde, eso es el bug**, no una limitación del navegador.
 
 **Ledger antes/después.** Antes de procesar, guardá el estado de las tablas del circuito (filas por estado,
 montos, fechas de egreso, contadores de cuotas, estado del contrato). Después, compará. Sin foto previa no hay
 verificación, hay impresión.
 
-**"No se ve" se mide en el DOM.** El "desaparece el titular" del 6143 era el encabezado fijo del IR tapando la
+**"No se ve" se mide en el DOM.** Un "desaparece el titular" era el encabezado fijo del IR tapando la
 primera fila tras cada refresco (Fixed Header + plugin de agrupación de columnas). La pista estaba en el
 paginador: decía "1 - 2" con una sola fila visible. Medí con `getBoundingClientRect` y confirmá con
 `elementFromPoint` que la fila recibe el click; una captura no alcanza.
@@ -90,23 +90,24 @@ Los diálogos apilados dejan iframes viejos: usar siempre el último.
 **Contabilidad**: probá el caso que SÍ genera asiento y el que NO debe generar ni fallar. Los `GEN_ASIENTO_*` son
 idempotentes (sólo insertan en `NO_DATA_FOUND`) y hacen **COMMIT interno**.
 
-**Si tocaste roles, relogueate**: `PERMISO_USUARIO` se arma al login.
+**Si tocaste roles, relogueate**: la tabla de permisos del usuario se arma al login.
 
 **Probá las escrituras con un usuario que los triggers no eximan.** Varios triggers del esquema tienen
-`IF NVL(V('APP_USER'),USER) != 'ANAMNESIS'` (ej. `DET_PAGO_PREPAGA_TRIG`): con anamnesis el borrado "anda" y además
-le infla el saldo a la factura. Grepeá `'ANAMNESIS'` en los triggers de las tablas del circuito. Si sólo hay
-credenciales de anamnesis para el navegador, cada escritura se prueba también por SQL con
-`apex_session.create_session(p_app_id=>400, p_page_id=>N, p_username=>'<usuario real>')` + package + `rollback`,
-devolviendo el resultado con `raise_application_error`.
+`IF NVL(V('APP_USER'),USER) != '<usuario del esquema dueño>'` (por ejemplo el trigger de detalle de pagos de una
+prepaga): con el usuario dueño del esquema el borrado "anda" y además le infla el saldo a la factura. Grepeá el
+nombre del usuario dueño del esquema en los triggers de las tablas del circuito. Si sólo hay credenciales del
+dueño para el navegador, cada escritura se prueba también por SQL con
+`apex_session.create_session(p_app_id=><id_app>, p_page_id=>N, p_username=>'<usuario real>')` + package +
+`rollback`, devolviendo el resultado con `raise_application_error`.
 
 ## 3. Cuando el ambiente no tiene el dato
 
-DEVNEW casi nunca tiene el caso raro. Dos caminos legítimos:
+El ambiente de desarrollo casi nunca tiene el caso raro. Dos caminos legítimos:
 
 **a) Prueba sintética contra el package.** Abrí una sesión APEX desde PL/SQL y armá la colección a mano:
 
 ```plsql
-apex_session.create_session(p_app_id => 400, p_page_id => <n>, p_username => 'ANAMNESIS');
+apex_session.create_session(p_app_id => <id_app>, p_page_id => <n>, p_username => '<usuario>');
 apex_collection.create_or_truncate_collection('<COLL>');
 apex_collection.add_member(p_collection_name => '<COLL>', p_c001 => '…', p_c002 => '…');
 <package>.<procedure>(…);   -- y capturás el error esperado
@@ -114,8 +115,9 @@ apex_collection.delete_collection('<COLL>');
 apex_session.delete_session(v('APP_SESSION'));
 ```
 
-Así se verificó en el 6143 la regla "todos los integrantes deben pasar al nuevo contrato" con dos clientes en el
-mismo lote, caso que **no existe** en DEVNEW (los 116 contratos activos tienen un solo cliente).
+Así se verificó, en una migración, la regla "todos los integrantes deben pasar al nuevo contrato" con dos clientes
+en el mismo lote, caso que **no existía** en el ambiente de desarrollo (todos los contratos activos tenían un solo
+cliente).
 
 **b) Sembrar el dato mínimo**, clonando uno existente y cambiando sólo lo necesario (una tarifa en dólares, por
 ejemplo). Con **id explícito** si el secuenciador está desfasado. Anotarlo en el ledger con la marca de que **no
@@ -123,20 +125,20 @@ va a producción**, y avisar si queda referenciado por datos de prueba (entonces
 
 ## 4. Antes de cambiar código compartido: buscar los llamadores
 
-- **Base**: `oracle_dependencies(<objeto>, used_by)`.
+- **Base**: `oracle_dependencies(<objeto>, used_by)` (o la consulta equivalente que permita el canal del perfil).
 - **Aplicación**: el export completo de la app **NO trae las páginas** (devuelve sólo componentes compartidos,
   ~20 MB sin una sola página). Hay que pedirlas explícitamente:
 
 ```plsql
 -- ids sacados de apex_describe_application
 for i in 1 .. ids.count loop comps.extend; comps(comps.count) := 'PAGE:' || ids(i); end loop;
-l := apex_export.get_application(p_application_id => 400, p_split => false, p_components => comps);
+l := apex_export.get_application(p_application_id => <id_app>, p_split => false, p_components => comps);
 -- luego dbms_lob.instr sobre l(1).contents
 ```
 
 **Siempre con un control positivo** (un texto que sabés que existe, por ejemplo el alias de la página). Si el
-control da cero, lo roto es tu búsqueda, no el resultado. En el 6143 esto evitó asumir que la página 364
-"Cambio de Plan - Masivo" usaba el mismo package: no lo usa.
+control da cero, lo roto es tu búsqueda, no el resultado. En una migración esto evitó asumir que otra página de
+cambio de plan masivo usaba el mismo package: no lo usaba.
 
 ## 5. Lo que NO cuenta como verificación
 
@@ -147,8 +149,8 @@ control da cero, lo roto es tu búsqueda, no el resultado. En el 6143 esto evit�
 - "Debería funcionar porque el código es el mismo".
 - Contar páginas o filas sin mirar el contenido.
 
-## Barrido de "todos los forms que usa" (941001, 26/10/2026)
-- Reconvertí el `.fmb` a XML y busqué `CALL_FORM|OPEN_FORM|NEW_FORM|RUN_PRODUCT` en **todos** los program units y triggers; después leí a su vez el código de cada form llamado (el 926) con la misma búsqueda.
-- **Llamadores del form:** grepear el nombre en los `.fmb` binarios de `FORMULARIOS` (leer los bytes como latin1 y buscar con regex; 1.700 archivos tardan ~1 min). Sólo así se confirma qué ramas del form son alcanzables (en el 941001 la rama `P_ID_ORDEN = 0` no lo era).
-- Para cada `CALL_FORM`, listar **parámetro por parámetro** lo que pasa el original y comprobar que la migración lo cubre. En el 941001 faltaba `P_FECHA` (valor inicial de la fecha del talón); el inventario inicial tenía todo en ❌ de borrador y nadie lo había contrastado.
+## Barrido de "todos los forms que usa"
+- Reconvertí el `.fmb` a XML y busqué `CALL_FORM|OPEN_FORM|NEW_FORM|RUN_PRODUCT` en **todos** los program units y triggers; después leí a su vez el código de cada form llamado con la misma búsqueda.
+- **Llamadores del form:** grepear el nombre en los `.fmb` binarios del repositorio de formularios (leer los bytes como latin1 y buscar con regex; con ~1.700 archivos tarda ~1 min). Sólo así se confirma qué ramas del form son alcanzables (en un caso, la rama `P_ID_ORDEN = 0` no lo era).
+- Para cada `CALL_FORM`, listar **parámetro por parámetro** lo que pasa el original y comprobar que la migración lo cubre. En un caso faltaba `P_FECHA` (valor inicial de la fecha del talón); el inventario inicial tenía todo en ❌ de borrador y nadie lo había contrastado.
 - Un botón del Forms que "no hace nada" cuando no se cumple una condición (`IF forma = 2`) **no puede** abrir un diálogo vacío en APEX.

@@ -1,6 +1,6 @@
 # Guia Completa: Migracion Oracle Forms 6i a Oracle APEX
 
-Todos los patrones, reglas, errores comunes y conocimiento acumulado para migrar Oracle Forms a APEX usando Claude Code + el MCP `oracle-apex` y la skill `migrar-formulario`.
+Todos los patrones, reglas, errores comunes y conocimiento acumulado para migrar Oracle Forms a APEX usando Claude Code + el MCP `oracle-apex` y la skill `forms2apex`.
 
 ---
 
@@ -19,7 +19,7 @@ https://github.com/silviosotelo/oracle-forms-migration (ver `conversion-fmb-rdf.
 - **NUNCA** usar Form como pagina principal sin IR detras
 
 ### Un paquete PL/SQL por entidad (SIEMPRE)
-- Nombre: `PKG_<ENTITY>` (ej: `PKG_ORDEN_PAGO`)
+- Nombre: `PKG_<ENTITY>` (ej: `PKG_PEDIDO`)
 - **NUNCA** separar en `_LECTURA` / `_ESCRITURA` — todo junto
 - Contiene: queries (get_lista, get_detalle), DML (guardar, eliminar), validaciones (validar), logica de negocio (procesar, anular, procesar_lote)
 - **BULK operations**: FORALL, BULK COLLECT — NUNCA row-by-row FOR LOOP con DML adentro
@@ -33,19 +33,19 @@ https://github.com/silviosotelo/oracle-forms-migration (ver `conversion-fmb-rdf.
 
 | Elemento | Patron | Ejemplo |
 |----------|--------|---------|
-| Page Items | P<page>_<COLUMN_NAME> | P937_ID_ORDEN_PAGO |
+| Page Items | P<page>_<COLUMN_NAME> | P10_ID_PEDIDO |
 | LOVs | LV_<ENTITY> | LV_EMPRESA |
-| Paquetes | PKG_<ENTITY> | PKG_ORDEN_PAGO |
-| Page Alias | kebab-case | ORD-PAGO, TALON-CHEQUE-FORM |
-| Auth Scheme | MN_<module>_DEF_<prog_id> | MN_ORD_PAGO_DEF_827 |
+| Paquetes | PKG_<ENTITY> | PKG_PEDIDO |
+| Page Alias | kebab-case | PEDIDO, PEDIDO-FORM |
+| Auth Scheme | según el perfil (convención del cliente) | p. ej. MN_<module>_DEF_<prog_id> |
 
 ---
 
 ## 4. ESTILO VISUAL
 
-- **Regions con borde**: Template "Blank with Attributes", CSS class `region-con-bordes borde-primario`
-- **Template de items**: Optional-Floating (NUNCA Required-Floating)
-- **CSS en toda pagina**: `#WORKSPACE_IMAGES#template-floating-minimalista.css`
+- **Regions con borde**: Template "Blank with Attributes" + la clase CSS de recuadro que fije el perfil (definida en el Inline CSS de la página)
+- **Template de items**: el field template que fije el perfil (p. ej. Optional/Required - Floating)
+- **CSS en toda pagina**: el archivo CSS que fije el perfil (`css_file_urls`, p. ej. `#WORKSPACE_IMAGES#<archivo>.css`)
 - **Montos**: `TO_CHAR(col, 'FM999G999G999G990D00')`
 - **Estados con color**: HTML spans en columnas IR con display_text_as = 'WITHOUT_MODIFICATION'
 
@@ -151,7 +151,7 @@ Usar `WHERE page_id=X AND plug_source_type='Y'` — nunca `WHERE id=<big_number>
 | reload_on_submit | 'S' | |
 | warn_on_unsaved_changes | 'Y' | |
 | autocomplete_on_off | 'OFF' | |
-| css_file_urls | '#WORKSPACE_IMAGES#template-floating-minimalista.css' | |
+| css_file_urls | '<css del perfil, p. ej. #WORKSPACE_IMAGES#<archivo>.css>' | Según el perfil |
 
 **Resolver user_interface_id:**
 ```sql
@@ -345,16 +345,16 @@ Despues de convertir .fmb con frmf2xml:
 ## 12. SCHEMAS LEGACY — PATRONES COMUNES
 
 Los schemas de Oracle Forms 6i usan nombres abreviados:
-- `ORD_PAGO` en vez de `ORDEN_PAGO`
+- `ORD_PED` en vez de `ORDEN_PEDIDO`
 - `PREST_SRV` en vez de `PRESTADOR_SERVICIO`
-- `COBR`, `PROM`, `MND`, `EMP`, `TRANS`, `PROV`
+- Abreviaturas del tipo `COBR`, `MND`, `EMP`, `TRANS`, `PROV`
 
 **SIEMPRE verificar nombres reales:**
 ```sql
 SELECT table_name FROM all_tables WHERE owner='<SCHEMA>' AND table_name LIKE '%keyword%';
 ```
-- `CONTRATO_CLIENTE` es generalmente la tabla central de joins
-- `FACTURA_PREPAGA`: los nombres de columnas varian entre schemas (NRO_FACTURA vs NUMERO_FACTURA)
+- Identificar la tabla central de joins del modelo (suele haber una "tabla puente" que une cliente/contrato/documento)
+- Los nombres de columnas varian entre schemas para el mismo concepto (p. ej. NRO_FACTURA vs NUMERO_FACTURA)
 
 ---
 
@@ -739,11 +739,11 @@ END PKG_<ENTITY>;
 
 ## 17. COMO USAR
 
-Esta guía es material de consulta de la skill `migrar-formulario`; el proceso de trabajo está en `SKILL.md`. Pedidos típicos:
+Esta guía es material de consulta de la skill `forms2apex`; el proceso de trabajo está en `SKILL.md`. Pedidos típicos:
 
 ```
-Migrá el formulario FORMA_827.fmb
-Analizá el XML de FORMA_6201 y decime qué bloques y triggers tiene
-Creá la página APEX para la tabla ORDEN_PAGO con IR + Form
-Convertí el reporte REP_ORDEN_PAGO.rdf a JasperReports
+Migrá el formulario FORMA_X.fmb
+Analizá el XML de FORMA_Y y decime qué bloques y triggers tiene
+Creá la página APEX para la tabla PEDIDO con IR + Form
+Convertí el reporte REP_PEDIDO.rdf a JasperReports
 ```

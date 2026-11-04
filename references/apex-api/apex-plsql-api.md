@@ -211,7 +211,7 @@ DECLARE
     l_ctx APEX_EXEC.T_CONTEXT;
 BEGIN
     l_ctx := APEX_EXEC.OPEN_LOCAL_DML_CONTEXT(
-        p_table_owner => 'ANAMNESIS',
+        p_table_owner => 'MI_ESQUEMA',
         p_table_name  => 'CLIENTE'
     );
     APEX_EXEC.ADD_DML_ROW(l_ctx, APEX_EXEC.C_DML_OP_INSERT);
@@ -635,7 +635,7 @@ v_style_id := APEX_THEME.GET_USER_STYLE(p_application_id => :APP_ID);
 -- Send email
 v_mail_id := APEX_MAIL.SEND(
     p_to        => 'user@example.com',
-    p_from      => 'noreply@santaclara.com',
+    p_from      => 'noreply@ejemplo.com',
     p_subj      => 'System Notification',
     p_body      => 'Plain text body',
     p_body_html => '<h1>HTML body</h1>'
@@ -834,13 +834,13 @@ apex_util.set_group_grant_privs(p_group_name => 'MY_GROUP', p_privs => 'USER');
 apex_util.set_security_group_id(p_security_group_id => v_ws_id);
 v_ws_id := apex_util.find_security_group_id('MY_WORKSPACE');
 apex_util.set_workspace('MY_WORKSPACE');
-apex_util.set_parsing_schema_for_request('ANAMNESIS');
+apex_util.set_parsing_schema_for_request('MI_ESQUEMA');
 ```
 
 #### URL and Navigation
 ```plsql
 v_encoded := apex_util.url_encode(v_param);
-v_url     := apex_util.prepare_url('f?p=400:10:&APP_SESSION.');
+v_url     := apex_util.prepare_url('f?p=&APP_ID.:10:&APP_SESSION.');
 apex_util.redirect_url(v_url);
 v_host    := apex_util.host_url('SCRIPT');  -- base URL with /ords/
 ```

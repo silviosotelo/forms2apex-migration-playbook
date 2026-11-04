@@ -30,7 +30,7 @@ Usar `WHERE page_id=X AND plug_source_type='Y'` — nunca `WHERE id=<big_number>
 | reload_on_submit | 'S' | |
 | warn_on_unsaved_changes | 'Y' | |
 | autocomplete_on_off | 'OFF' | |
-| css_file_urls | '#WORKSPACE_IMAGES#template-floating-minimalista.css' | |
+| css_file_urls | '<css del perfil, p. ej. #WORKSPACE_IMAGES#<archivo>.css>' | Según el perfil |
 
 ## wwv_flow_page_plugs (Regions)
 

@@ -1,6 +1,6 @@
 # <NRO> – <NOMBRE> · Estado de la migración
 
-**Estado:** <en construcción | listo en DEVNEW, pase manual pendiente | en producción, verificado el dd/mm/aaaa>
+**Estado:** <en construcción | listo en el ambiente de desarrollo, pase manual pendiente | en producción, verificado el dd/mm/aaaa>
 **Origen:** <migración nueva | ticket NNNN>
 
 ## Qué hace el formulario
@@ -16,8 +16,8 @@
 
 | Pieza | Archivo |
 |---|---|
-| Package (spec + body completo) | `Paquetes y Scripts PLSQL/PKG_<…>.sql` |
-| Página(s) APEX (export) | `f400_page_<NNNN>_<NOMBRE>_FINAL.sql` |
+| Package (spec + body completo) | `<carpeta de packages>/PKG_<…>.sql` |
+| Página(s) APEX (export) | `f<ID_APP>_page_<NNNN>_<NOMBRE>_FINAL.sql` |
 | Respaldo de lo previo | `respaldo_pre_fix/` |
 | Auditoría + resolución + ledger | `AUDITORIA_FMB_vs_APEX.md` |
 | Capturas | `*.png` |
@@ -26,9 +26,9 @@
 
 <resumen de la matriz: qué caminos se ejecutaron y contra qué datos; qué quedó sin probar>
 
-## Pase a SANTA (manual — lo hace el usuario)
+## Pase a producción (manual — lo hace el usuario)
 
-0. Respaldar la página de SANTA y confirmar que existen ahí, con el mismo id, los componentes compartidos:
+0. Respaldar la página en producción y confirmar que existen ahí, con el mismo id, los componentes compartidos:
    <listar esquemas y LOVs con su id>
 1. Compilar el package.
 2. Importar el export de la página **desde App Builder**.
