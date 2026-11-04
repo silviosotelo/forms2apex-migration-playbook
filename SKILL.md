@@ -1,29 +1,31 @@
 ---
 name: migrar-formulario
-description: Playbook de proceso para migrar un formulario Oracle Forms 6i a APEX en la app 400 de Santa Clara (DEVNEW/SANTA), y para verificar o corregir una migración ya hecha cuando llega un ticket. Usala cuando el pedido sea "migrá el formulario X a APEX", "seguí con la migración de X", "verificá la migración de X", "el formulario X del SC+ no funciona", cualquier trabajo sobre los .fmb de anamnesis, sobre páginas de la app 400, o sobre los packages PKG_* de esas migraciones. Define fases, reglas duras de lo permitido y prohibido, cómo se audita, cómo se prueba (matriz de casos y método), cómo se cierra y cómo se verifica en producción. Complementa a oracle-apex-dev y oracle-apex-migrate, que aportan el conocimiento de las APIs.
+description: Playbook de proceso para migrar un formulario Oracle Forms 6i a APEX en la app 400 de Santa Clara (DEVNEW/SANTA), y para verificar o corregir una migración ya hecha cuando llega un ticket. Usala cuando el pedido sea "migrá el formulario X a APEX", "seguí con la migración de X", "verificá la migración de X", "el formulario X del SC+ no funciona", cualquier trabajo sobre los .fmb de anamnesis, sobre páginas de la app 400, o sobre los packages PKG_* de esas migraciones. Define fases, reglas duras de lo permitido y prohibido, cómo se audita, cómo se prueba (matriz de casos y método), cómo se cierra y cómo se verifica en producción. Es autosuficiente: trae también las referencias de APIs de APEX, el mapeo Forms→APEX, los internals de wwv_flow_* y las plantillas (todo en `references/` y `plantillas/`).
 ---
 
 # Migrar un formulario Forms 6i → APEX (app 400)
 
 Playbook destilado de las migraciones **72, 827, 926, 1808, 6201, 6212, 6252 y 6143**. **Esta skill es el proceso y la
-única puerta de entrada**: las otras tres son bibliotecas que se consultan desde acá.
+única puerta de entrada**, y trae todo el material de consulta dentro (no depende de otras skills).
 
 | Necesitás | Dónde está |
 |---|---|
 | El proceso, las reglas, la verificación, el cierre | **esta skill** |
-| APIs de APEX (PL/SQL, JS, vistas, versiones) | `/oracle-apex-dev` |
-| Mapeo conceptual Forms→APEX (bloques, triggers, LOVs) | `/oracle-apex-migrate` |
-| Conversores `.fmb`/`.rdf` → XML, plantilla de package, internals `wwv_flow_*`, JasperReports | `/oracle-forms-migration` (`tools/`, `templates/`, `references/`) |
-| Tablas `wwv_flow_*` columna por columna, errores comunes del proyecto | `Migraciones/GUIA-MIGRACION-FORMS-APEX.md` |
-| Estado de cada formulario del proyecto | `Migraciones/WORKFLOW-MIGRACION-FORMS-APEX.md` |
+| APIs de APEX (PL/SQL, JS, vistas, versiones, IR/IG, API de Oracle DB) | `references/apex-api/` (empezar por `00-guia-apex-dev.md`) |
+| Mapeo conceptual Forms→APEX (bloques, triggers, LOVs, reglas) | `references/mapeo/` (empezar por `00-guia-forms-a-apex.md`) |
+| Conversión `.fmb`/`.rdf` → XML y flujo base | `references/conversores-y-flujo.md` |
+| Plantilla de package PL/SQL | `plantillas/package-template.sql` |
+| Internals `wwv_flow_*`, mapeo de Forms, JasperReports | `references/internals/` |
+| Tablas `wwv_flow_*` columna por columna, errores comunes del proyecto | `references/guia-wwv-flow.md` |
+| Estado de cada formulario del proyecto | `Migraciones/WORKFLOW-MIGRACION-FORMS-APEX.md` (archivo del proyecto, no de la skill) |
 | Patrones de UI de listado + ficha, botonera flotante, guardado sin pérdida de datos | `references/patrones-ui-form.md` |
 
 Para convertir el `.fmb`: el `frmf2xml.bat` de Oracle Forms 12c desde **PowerShell** con `ORACLE_HOME` seteado
-es el que funciona; el conversor bundled de `/oracle-forms-migration` falla por falta de `frmjapi.dll` nativa.
+es el que funciona; el conversor bundled (`.jar` de Oracle, no incluido en este repo) falla por falta de `frmjapi.dll` nativa.
 
 ## Arranque inmediato
 
-1. Invocar `/oracle-apex-dev` y `/oracle-apex-migrate`.
+1. Leer `references/apex-api/00-guia-apex-dev.md` y `references/mapeo/00-guia-forms-a-apex.md` (y los archivos de esas carpetas que el caso pida).
 2. **PASO −1 — verificar el punto de partida antes de tocar nada:**
    - **¿Ya está migrado?** `PROGRAMA.ID_PAGE_APEX IS NULL` no alcanza: la misma función puede estar migrada
      desde otro módulo con otro id y otro nombre. Buscar por **descripción** en `PROGRAMA` y por nombre/alias
