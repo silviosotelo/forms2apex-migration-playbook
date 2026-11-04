@@ -66,7 +66,7 @@ Usar el MCP oracle-apex para ejecutar PL/SQL que crea las páginas programática
 - Página IR: Filtros (bordered) + Interactive Report + Floating buttons
 - Página Form: Modal dialog con CRUD
 
-Ver [internals/apex-internals.md](apex-internals.md) para tablas wwv_flow_*.
+Ver [apex-internals.md](internals/apex-internals.md) para tablas wwv_flow_*.
 
 ### 6. VERIFICAR
 Usar `apex_describe_page` del MCP para verificar que todo se creó bien.
@@ -133,7 +133,7 @@ Crear AJAX callback + botón de descarga en la página APEX.
 
 ## Referencias Detalladas
 
-- [internals/apex-internals.md](apex-internals.md) — Tablas wwv_flow_*, template IDs, data dictionary views, ORA-00904 fixes
+- [apex-internals.md](internals/apex-internals.md) — Tablas wwv_flow_*, template IDs, data dictionary views, ORA-00904 fixes
 - [apex-plsql-api.md](apex-api/apex-plsql-api.md) — 41 paquetes APEX PL/SQL: APEX_JSON, APEX_ERROR, APEX_COLLECTION, AJAX callbacks, Forms built-in mapping
 - [apex-js-api.md](apex-api/apex-js-api.md) — APIs JavaScript APEX: apex.server/item/region/page/message/navigation/da/util/actions, $v/$s legacy, trigger patterns
 - [oracle-db-api.md](apex-api/oracle-db-api.md) — Oracle DB APIs: DBMS_LOB, DBMS_METADATA, DBMS_SCHEDULER, DBMS_CRYPTO, JSON_OBJECT_T, REGEXP, analytics, dictionary views
