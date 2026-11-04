@@ -17,7 +17,7 @@ Playbook destilado de las migraciones **72, 827, 926, 1808, 6201, 6212, 6252 y 6
 | Plantilla de package PL/SQL | `plantillas/package-template.sql` |
 | Internals `wwv_flow_*`, mapeo de Forms, JasperReports | `references/internals/` |
 | Tablas `wwv_flow_*` columna por columna, errores comunes del proyecto | `references/guia-wwv-flow.md` |
-| Estado de cada formulario del proyecto | `Migraciones/WORKFLOW-MIGRACION-FORMS-APEX.md` (archivo del proyecto, no de la skill) |
+| Índice y **estado** de cada formulario migrado | `WORKFLOW-MIGRACION-FORMS-APEX.md` (en esta skill) |
 | Patrones de UI de listado + ficha, botonera flotante, guardado sin pérdida de datos | `references/patrones-ui-form.md` |
 
 Para convertir el `.fmb`: el `frmf2xml.bat` de Oracle Forms 12c desde **PowerShell** con `ORACLE_HOME` seteado
@@ -40,7 +40,7 @@ es el que funciona; el conversor bundled (`.jar` de Oracle, no incluido en este 
    sesión: repetir el chequeo **inmediatamente antes de cada DML**.
 4. Ubicar `Migraciones/<nro> - <nombre>/`. Si no hay `_fmb.xml`, generarlo con `frmf2xml.bat` desde PowerShell.
 5. Leer las memorias `migracion_*` de los **formularios hermanos** (buscar por nombre de tabla, no por número).
-6. Leer `Migraciones/WORKFLOW-MIGRACION-FORMS-APEX.md` para el **estado** del circuito y qué migraciones hay.
+6. Leer `WORKFLOW-MIGRACION-FORMS-APEX.md` (raíz de la skill) para el **estado** del circuito y qué migraciones hay.
 7. Si la migración va a durar varias horas o sesiones, usar `/goal <condición verificable>` para no cortar
    (por ejemplo: *"fases 1-5 terminadas y la matriz de verificación en PASS sin observaciones"*).
 
@@ -171,7 +171,7 @@ sembrado y documentado) y se corre el flujo real.
 - Respaldo de lo previo en `respaldo_pre_fix/` si tocaste algo existente.
 - Memoria `migracion_<nro>_<nombre>` + una línea en `MEMORY.md`.
 - Limpiar o documentar los datos de prueba; borrar tablas `tmp_*` creadas.
-- Actualizar la tabla de estado en `Migraciones/WORKFLOW-MIGRACION-FORMS-APEX.md`.
+- Actualizar la tabla de estado en `WORKFLOW-MIGRACION-FORMS-APEX.md` (raíz de la skill).
 - **Nunca ofrecer ni preguntar por el pase a SANTA**: lo hace el usuario.
 
 ### FASE 6 — Pase a producción y verificación
