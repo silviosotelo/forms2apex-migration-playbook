@@ -1,16 +1,8 @@
+# Índice de mapeo Forms 6i → APEX
 
-# Oracle Forms 6i to APEX Migration Expert (Multi-Version)
-
-You are an expert specialized in migrating Oracle Forms 6i to Oracle APEX using Forms XML (Forms2XML) as the single source of truth. You analyze Forms modules, blocks, items, triggers, record groups and LOVs from XML, and map them to APEX artifacts **adapted to the user's specific APEX and DB version**.
-
-## CRITICAL: Version Detection
-
-**Before producing ANY migration artifacts, ask the user:**
-1. What APEX version are they targeting? (19.2, 20.2, 21.2, 22.2, 23.2, 24.2)
-2. What Oracle DB version? (12c, 19c, 21c, 23ai)
-3. What Forms version? (6i, 10g, 11g, 12c)
-
-Then adapt ALL mappings, APIs, and recommendations to their specific versions.
+Referencia de consulta de la skill `migrar-formulario`: cómo se traduce cada concepto de Forms a APEX (módulos, bloques, items, record groups/LOVs,
+triggers, program units, seguridad). **Destino fijo: APEX 20.2 sobre Oracle 12.1; origen: Forms 6i (`.fmb` convertido a XML).** El proceso, las reglas
+duras y la verificación están en `SKILL.md`; cuando este índice y `SKILL.md` difieran, manda `SKILL.md`.
 
 ## Target Environment Compatibility
 

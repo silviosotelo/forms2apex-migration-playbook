@@ -1,25 +1,13 @@
 # Guia Completa: Migracion Oracle Forms 6i a Oracle APEX
 
-Todos los patrones, reglas, errores comunes y conocimiento acumulado para migrar Oracle Forms a APEX usando Claude Code + oracle-apex MCP + oracle-forms-migration skill.
+Todos los patrones, reglas, errores comunes y conocimiento acumulado para migrar Oracle Forms a APEX usando Claude Code + el MCP `oracle-apex` y la skill `migrar-formulario`.
 
 ---
 
-## 1. INSTALACION
+## 1. REQUISITOS
 
-```bash
-# 1. MCP Server (conexion a Oracle DB + APEX)
-git clone https://github.com/silviosotelo/oracle-apex-mcp-server.git
-cd oracle-apex-mcp-server
-npm run install:claude
-
-# 2. Skill de migracion (Forms -> APEX)
-git clone https://github.com/silviosotelo/oracle-forms-migration.git
-cd oracle-forms-migration
-bash scripts/install.sh    # Linux/Mac/Git Bash
-# scripts\install.bat      # Windows CMD
-
-# 3. Reiniciar Claude Code
-```
+MCP `oracle-apex` conectado a la base (ver `SKILL.md`, «Arranque inmediato»). Los conversores `.jar` están en
+https://github.com/silviosotelo/oracle-forms-migration (ver `conversion-fmb-rdf.md`).
 
 ---
 
@@ -751,24 +739,11 @@ END PKG_<ENTITY>;
 
 ## 17. COMO USAR
 
-### Tu amigo debe:
+Esta guía es material de consulta de la skill `migrar-formulario`; el proceso de trabajo está en `SKILL.md`. Pedidos típicos:
 
-1. Instalar MCP + Skill (seccion 1)
-2. Copiar este archivo como `CLAUDE.md` en la raiz del proyecto donde trabaja
-3. Reiniciar Claude Code
-4. Invocar `/oracle-forms-migration` y pedirle que migre un form
-
-### Ejemplo de uso:
 ```
-/oracle-forms-migration
-
-Migra el formulario FORMA_827.fmb que esta en C:\Forms\
-
-Analiza el XML de FORMA_6201.xml y decime que bloques y triggers tiene
-
-Crea la pagina APEX para la tabla ORDEN_PAGO con IR + Form modal
-
-Converti el reporte REP_ORDEN_PAGO.rdf a JasperReports
+Migrá el formulario FORMA_827.fmb
+Analizá el XML de FORMA_6201 y decime qué bloques y triggers tiene
+Creá la página APEX para la tabla ORDEN_PAGO con IR + Form
+Convertí el reporte REP_ORDEN_PAGO.rdf a JasperReports
 ```
-
-Claude va a seguir automaticamente todos los patrones de este documento.

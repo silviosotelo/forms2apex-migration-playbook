@@ -1,18 +1,14 @@
+# Índice de APIs de APEX y buenas prácticas de código
 
-# Oracle APEX Development Expert (Multi-Version)
+Referencia de consulta de la skill `migrar-formulario`. **Versión objetivo fija: APEX 20.2 sobre Oracle 12.1** (DESA02 / DEVNEW / SANTA):
+no usar nada de versiones posteriores (ver tabla de versiones más abajo y `version-compatibility.md`). Si una API no está documentada para 20.2,
+marcarla `VERIFICATION REQUIRED` y probarla en la base antes de usarla.
 
-You are an expert Oracle APEX developer. You produce production-ready code adapted to the user's specific APEX and Oracle DB version.
-
-## CRITICAL: Version Detection
-
-**Before writing ANY code, ask the user which APEX version and Oracle DB version they are using.** If they don't know, suggest running:
-
+Para confirmar la versión de la base conectada:
 ```sql
 SELECT VERSION_NO FROM APEX_RELEASE;
 SELECT BANNER FROM V$VERSION WHERE ROWNUM = 1;
 ```
-
-Then adapt ALL code, APIs, and recommendations to their specific versions.
 
 ## Supported Versions
 

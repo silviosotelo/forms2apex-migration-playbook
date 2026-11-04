@@ -11,9 +11,9 @@ Playbook destilado de las migraciones **72, 827, 926, 1808, 6201, 6212, 6252 y 6
 | Necesitás | Dónde está |
 |---|---|
 | El proceso, las reglas, la verificación, el cierre | **esta skill** |
-| APIs de APEX (PL/SQL, JS, vistas, versiones, IR/IG, API de Oracle DB) | `references/apex-api/` (empezar por `00-guia-apex-dev.md`) |
-| Mapeo conceptual Forms→APEX (bloques, triggers, LOVs, reglas) | `references/mapeo/` (empezar por `00-guia-forms-a-apex.md`) |
-| Conversión `.fmb`/`.rdf` → XML y flujo base | `references/conversores-y-flujo.md` |
+| APIs de APEX (PL/SQL, JS, vistas, versiones, IR/IG, API de Oracle DB) | `references/apex-api/` (empezar por `00-indice-apis-apex.md`) |
+| Mapeo conceptual Forms→APEX (bloques, triggers, LOVs, reglas) | `references/mapeo/` (empezar por `00-indice-mapeo-forms-apex.md`) |
+| Conversión `.fmb`/`.rdf` → XML y flujo base | `references/conversion-fmb-rdf.md` |
 | Plantilla de package PL/SQL | `plantillas/package-template.sql` |
 | Internals `wwv_flow_*`, mapeo de Forms, JasperReports | `references/internals/` |
 | Tablas `wwv_flow_*` columna por columna, errores comunes del proyecto | `references/guia-wwv-flow.md` |
@@ -25,7 +25,7 @@ es el que funciona; el conversor bundled (`.jar` de Oracle, no incluido en este 
 
 ## Arranque inmediato
 
-1. Leer `references/apex-api/00-guia-apex-dev.md` y `references/mapeo/00-guia-forms-a-apex.md` (y los archivos de esas carpetas que el caso pida).
+1. Leer `references/apex-api/00-indice-apis-apex.md` y `references/mapeo/00-indice-mapeo-forms-apex.md` (y los archivos de esas carpetas que el caso pida).
 2. **PASO −1 — verificar el punto de partida antes de tocar nada:**
    - **¿Ya está migrado?** `PROGRAMA.ID_PAGE_APEX IS NULL` no alcanza: la misma función puede estar migrada
      desde otro módulo con otro id y otro nombre. Buscar por **descripción** en `PROGRAMA` y por nombre/alias
