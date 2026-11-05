@@ -60,6 +60,21 @@ Para repetir la medición sobre un archivo propio, usá `--verificar` con cualqu
 
 Todo lo que no se pueda confirmar se anota en la auditoría como **«propiedad sin verificar»**, nunca como supuesto.
 
+## Layout: copiar la disposición del original (no apilar los items)
+
+Una ficha que pone los campos uno debajo del otro **no es réplica** del formulario. La disposición (canvas, pestañas, fila y columna de cada
+item) sale **solo** de las propiedades `XPosition`/`YPosition`/`Width`/`Height`/`CanvasName`/`TabPageName`, y esas **no se recuperan del binario sin Oracle**
+(se probó: el nombre del item no está en claro en su definición; solo aparece dentro del código).
+
+| Situación | Qué hacer |
+|---|---|
+| Hay XML de Forms2XML | `python scripts/layout_forms.py MODULO_fmb.xml -o layout.md`: filas por Y, orden por X y `colspan` sugerido sobre 12, por canvas y pestaña. Construir la ficha **siguiendo ese orden y agrupamiento**; el `item_sequence` acompaña al orden visual |
+| No hay XML | Pedirlo (es lo primero a pedir). Si no hay forma: capturas del formulario corriendo (una por canvas/pestaña) y armar las filas a mano con ellas; declarar en la auditoría «layout tomado de capturas» |
+| Reporte `.rdf` | `RWCON60` → `.rex` trae las coordenadas (ver `reportes-rdf.md`); el PDF de `RWRUN60` es la referencia visual |
+
+El `colspan` es una sugerencia por proporción de anchos; lo que se respeta es **qué campos van en la misma fila, en qué orden y qué
+bloque/canvas/pestaña los agrupa**. Los marcos de región reflejan los canvases/frames del original.
+
 ## Reglas de manejo
 - Los fuentes originales son de **solo lectura**: copiar a local, procesar la copia, no modificar ni mover nada en el servidor.
 - Guardar el extracto/XML junto a la migración (`<nro> - <nombre>/`): es la base de la auditoría y sobrevive a una compactación de contexto.

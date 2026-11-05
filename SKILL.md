@@ -29,6 +29,7 @@ Leé el perfil entero antes de la primera consulta a la base. Cuando esta skill 
 | Necesitás | Archivo |
 |---|---|
 | Sacar la lógica de un `.fmb` / `.rdf` | `scripts/extraer_fmb_rdf.py` · `references/conversion-fmb-rdf.md` |
+| Copiar la disposición del original (canvas, filas, columnas) desde el XML | `scripts/layout_forms.py` · sección «Layout» de `conversion-fmb-rdf.md` |
 | Dónde vive la lógica en Forms; trampas de paridad | `references/paridad-forms.md` |
 | Matriz de pruebas, método, qué NO cuenta como verificación | `references/verificacion.md` |
 | `wwv_flow_api`, DA, IR, parchar una página existente | `references/gotchas-apex.md` · `scripts/export_apex.py` |
@@ -63,7 +64,7 @@ units): triggers con su dueño `BLOQUE.ITEM`, program units, todas las sentencia
 referencias `:BLOQUE.ITEM`, y las llamadas a otros módulos. Con eso se audita toda la **lógica** del formulario.
 
 **Lo que B no da**: propiedades de items (tipo, longitud, obligatorio), LOV asociada a cada item, canvases/posiciones, relaciones,
-alertas. Esas se completan **leyendo la tabla y el diccionario de la base** y confirmando con el usuario; lo que no se pueda confirmar
+alertas, y sobre todo **posiciones**: sin ellas no se puede copiar la disposición del formulario. Pedí el XML de Forms2XML (o capturas por canvas) y usá `scripts/layout_forms.py`; no apiles los items. Las demás se completan **leyendo la tabla y el diccionario de la base** y confirmando con el usuario; lo que no se pueda confirmar
 va a la auditoría como «propiedad sin verificar», nunca como supuesto. Usá `--verificar XML` cuando haya un XML de otro módulo
 equivalente para medir cuánto confiar. Detalle y uso en `references/conversion-fmb-rdf.md`.
 
