@@ -119,3 +119,15 @@ Patrón (el código exacto lo da el perfil; se copia de la página de referencia
   probar el resto, setear el valor con `document.getElementById(id).value = …` (no dispara el `change` de APEX) y declarar lo no probado.
 - Un resultado de `oracle_query` de más de ~200.000 caracteres se **trunca** en el archivo guardado (JSON roto): exportar páginas
   grandes en tandas de ≤ 30 chunks de 3.000 caracteres y rearmar con un script que verifique que no falten números de chunk.
+
+## 11. Ficha pasada de modal a página (lecciones del 6201, 7/11/2026)
+- **Las URL de navegación se arman en el servidor**: `&APP_ID.`/`&SESSION.` no se sustituyen en el JS de página y una `f?p=` armada en el cliente no se traduce a URL amigable (rompe los modales y a veces da login). `apex_page.get_url(...)` en hidden items (`PXXX_URL_ANTERIOR/SIGUIENTE/LISTADO`) y JS `apex.navigation.redirect($v("PXXX_URL_..."))`. Los botones `REDIRECT_URL` con `javascript:fn('A')` sirven para pasar por una confirmación (detalle en memoria sin grabar).
+- **Botón `SUBMIT` + DA Confirm no frena el submit** (el POST sale antes de responder): botón `DEFINED_BY_DA` y DA con Confirm -> Submit Page (como el «Aplicar promoción» de la 991). Probar con la lista de `request` (`page.on('request')`) que Cancelar no envía nada.
+- Al sacar el modal hay que reemplazar el `NATIVE_CLOSE_WINDOW` por branches (`REQUEST_EQUALS_CONDITION`) que vuelvan a la misma ficha con `&success_msg=#SUCCESS_MSG#` (Guardar/Anular/Crear) o al listado (Eliminar) y agregar mensajes de éxito al proceso.
+- Una ficha sobre una **colección de lista** (IR del listado) debe conservar el comportamiento previo del listado (si abría con datos, la colección se arma en `BEFORE_HEADER` cuando no existe; FILTRAR/LIMPIAR solo la borran) y declarar el tope.
+- El rediseño de otra migración puede vivir solo en un ambiente (la 991 de DEVNEW era la vieja): estudiar la referencia en el ambiente donde está y en su export final.
+
+## 12. Badges de estado dentro de la botonera flotante (6201, 7/11/2026)
+- Si el estado/impreso/asentado son ítems *Display Only* dentro de la región de botones, cada contenedor `t-Form-fieldContainer--hiddenLabel` conserva un `.t-Form-labelContainer--hiddenLabel` con `min-height:32px` aunque el rótulo esté oculto: el contenedor mide 76 px (32 + 44) y el badge queda ~16 px más abajo que los botones. Un `display:none` sin `!important` no alcanza (el tema lo pisa). Arreglo en el CSS de la página: `#regionBotones .t-Form-fieldContainer { min-height:0 !important }` y `#regionBotones .t-Form-labelContainer, #regionBotones .t-Form-labelContainer--hiddenLabel { display:none !important; min-height:0 !important }`.
+- **Se verifica midiendo, no mirando**: `getBoundingClientRect()` de botones y badges, centro vertical igual (±1 px), con menú colapsado y expandido, a 1366 y 1920, con un registro anulado y con uno nuevo (sin badges). Una captura no alcanza para ver 16 px.
+- Compará siempre contra la ficha de referencia en el mismo ambiente: su badge ocupa la misma fila y está centrado con los botones.

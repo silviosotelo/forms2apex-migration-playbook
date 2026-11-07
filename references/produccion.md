@@ -61,3 +61,13 @@ dónde se obtienen las credenciales de prueba.
 - Actualizar la memoria de la migración: de "pase pendiente" a "en producción, verificado el <fecha>".
 - Si el ticket lo originó, redactar la respuesta para el ticket: qué fallaba, qué se corrigió, qué tiene que
   hacer el área usuaria y qué decisiones quedan abiertas.
+
+## Trampas del pase vía utl_http + dbms_sql (6201, 7/11/2026)
+- Un procedure temporal que hace `utl_http` debe ser `AUTHID CURRENT_USER`: la ACL de red de ANAMNESIS va por rol; con derechos de definidor da ORA-24247 (el bloque anónimo sí funciona).
+- Servidor único Python en la PC (POST guarda, GET sirve; `norm` para CRLF→LF) en un puerto libre (el 8765 puede tener un receptor viejo). No guardar `storageState` de Playwright en la carpeta servida. Cerrar y borrar al terminar.
+- Comparar el export de SANTA con el de la base fuente byte a byte (`apex_export` componente por componente, POST al receptor, `diff`): es la prueba más fuerte de que seguridad y LOV viajaron.
+
+## El archivo del package en disco no es la fuente del pase (71, 7/11/2026)
+- Un parche hecho solo en la base (compilado por el MCP, sin tocar el `.sql`) deja el archivo **desfasado**: el 71 pasó a producción con la versión vieja y se detectó al comparar huellas. Antes de pasar un package, sacar el texto de `user_source` de la base probada (con `create or replace ` delante) y comparar `sum(ora_hash(text||'|'||line))` base contra base; recién ahí cargarlo. Si el cliente MCP compila sin comentarios ni líneas en blanco, la huella solo vale base contra base (no contra el archivo); para localizar una diferencia, hash por línea normalizada en tramos.
+- Después del pase, reemplazar el archivo de la carpeta por el compilado y dejar el anterior en `respaldo_pre_fix/`.
+- Las decisiones funcionales abiertas se preguntan **antes** del pase con una pregunta cerrada cada una (función de base, LOV, reportes, roles): el 6201 se pasó sin sorpresas porque se resolvieron antes.
